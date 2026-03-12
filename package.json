@@ -1,0 +1,23 @@
+{
+  "name": "tree-sitter-grub",
+  "version": "0.1.0",
+  "description": "Tree-sitter grammar for GRUB configuration files (grub.cfg)",
+  "main": "bindings/node",
+  "keywords": ["parser", "tree-sitter", "grub"],
+  "license": "MIT",
+  "devDependencies": {
+    "tree-sitter-cli": "^0.25.10"
+  },
+  "scripts": {
+    "generate": "tree-sitter generate",
+    "test": "tree-sitter test",
+    "parse": "tree-sitter parse"
+  },
+  "tree-sitter": [
+    {
+      "scope": "source.grub",
+      "file-types": ["grub.cfg"],
+      "injection-regex": "grub"
+    }
+  ]
+}

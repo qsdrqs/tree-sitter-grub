@@ -1,0 +1,413 @@
+==================
+Single command
+==================
+
+insmod ext2
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (simple_word)))
+
+==================
+Command with options
+==================
+
+search --no-floppy --fs-uuid --set=root abcd-1234
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (word)
+    argument: (word)
+    argument: (word)
+    argument: (concatenation
+      (simple_word)
+      (word))))
+
+==================
+Multiple commands
+==================
+
+insmod part_gpt
+insmod fat
+insmod ext2
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (simple_word))
+  (simple_command
+    name: (simple_word)
+    argument: (simple_word))
+  (simple_command
+    name: (simple_word)
+    argument: (simple_word)))
+
+==================
+Semicolon terminated
+==================
+
+set a=1; set b=2
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (concatenation
+      (simple_word)
+      (word)))
+  (simple_command
+    name: (simple_word)
+    argument: (concatenation
+      (simple_word)
+      (word))))
+
+==================
+Variable expansion
+==================
+
+echo $root ${prefix}
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (variable_expansion)
+    argument: (variable_expansion)))
+
+==================
+Special variable expansion
+==================
+
+echo $? $@ $* $# $1 ${10}
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (variable_expansion)
+    argument: (variable_expansion)
+    argument: (variable_expansion)
+    argument: (variable_expansion)
+    argument: (variable_expansion)
+    argument: (variable_expansion)))
+
+==================
+Single quoted string
+==================
+
+echo 'hello world'
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (single_quoted_string)))
+
+==================
+Double quoted string
+==================
+
+echo "hello world"
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (double_quoted_string
+      (string_content))))
+
+==================
+String with escape
+==================
+
+echo "hello \"world\""
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (double_quoted_string
+      (string_content))))
+
+==================
+Comment line
+==================
+
+# This is a comment
+insmod ext2
+
+---
+
+(source_file
+  (comment)
+  (simple_command
+    name: (simple_word)
+    argument: (simple_word)))
+
+==================
+Inline comment
+==================
+
+set timeout=5 # seconds
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (concatenation
+      (simple_word)
+      (word)))
+  (comment))
+
+==================
+Set with quoted value
+==================
+
+set default="0"
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (concatenation
+      (simple_word)
+      (word)
+      (double_quoted_string
+        (string_content)))))
+
+==================
+Test command (brackets)
+==================
+
+[ -s "$prefix/grubenv" ]
+
+---
+
+(source_file
+  (simple_command
+    name: (word)
+    argument: (word)
+    argument: (double_quoted_string
+      (variable_expansion)
+      (string_content))
+    argument: (word)))
+
+==================
+Variable in middle of string
+==================
+
+echo "path: ${root}/boot"
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (double_quoted_string
+      (string_content)
+      (variable_expansion)
+      (string_content))))
+
+==================
+Multiple variables in string
+==================
+
+echo "${root}/${kernel}"
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (double_quoted_string
+      (variable_expansion)
+      (string_content)
+      (variable_expansion))))
+
+==================
+String with only variable
+==================
+
+echo "${prefix}"
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (double_quoted_string
+      (variable_expansion))))
+
+==================
+Empty string
+==================
+
+echo ""
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (double_quoted_string)))
+
+==================
+Variable concatenated with path
+==================
+
+echo $root/boot/vmlinuz
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (concatenation
+      (variable_expansion)
+      (word))))
+
+==================
+Braced variable concatenated with path
+==================
+
+echo ${prefix}/grubenv
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (concatenation
+      (variable_expansion)
+      (word))))
+
+==================
+Device spec with path
+==================
+
+linux (hd0,1)/boot/vmlinuz
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (word)))
+
+==================
+Multiple variables concatenated
+==================
+
+echo $var1$var2
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (concatenation
+      (variable_expansion)
+      (variable_expansion))))
+
+==================
+Quoted string followed by variable
+==================
+
+echo "text"$var
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (concatenation
+      (double_quoted_string
+        (string_content))
+      (variable_expansion))))
+
+==================
+Hash in middle of word
+==================
+
+echo foo#bar
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (simple_word)))
+
+==================
+Hash in assignment value
+==================
+
+set root=hd0#gpt1
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (concatenation
+      (simple_word)
+      (word))))
+
+==================
+Hash after variable is comment
+==================
+
+echo $var # trailing
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (variable_expansion))
+  (comment))
+
+==================
+Hash inside double-quoted string
+==================
+
+echo "hello#world"
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (double_quoted_string
+      (string_content))))
+
+==================
+Hash after variable inside string
+==================
+
+echo "$var#rest"
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (double_quoted_string
+      (variable_expansion)
+      (string_content))))

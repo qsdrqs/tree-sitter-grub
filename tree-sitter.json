@@ -1,0 +1,16 @@
+{
+  "grammars": [
+    {
+      "name": "grub",
+      "scope": "source.grub",
+      "path": ".",
+      "file-types": ["grub.cfg"],
+      "injection-regex": "grub"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "Tree-sitter grammar for GRUB configuration files"
+  }
+}

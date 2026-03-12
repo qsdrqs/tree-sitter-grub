@@ -1,0 +1,96 @@
+==================
+Menuentry with block
+==================
+
+menuentry "NixOS" --class nixos {
+  linux /vmlinuz
+  initrd /initrd
+}
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (double_quoted_string
+      (string_content))
+    argument: (word)
+    argument: (simple_word)
+    body: (block
+      (simple_command
+        name: (simple_word)
+        argument: (word))
+      (simple_command
+        name: (simple_word)
+        argument: (word)))))
+
+==================
+Nested submenu
+==================
+
+submenu "Advanced" {
+  menuentry "Recovery" {
+    linux /vmlinuz single
+  }
+}
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (double_quoted_string
+      (string_content))
+    body: (block
+      (simple_command
+        name: (simple_word)
+        argument: (double_quoted_string
+          (string_content))
+        body: (block
+          (simple_command
+            name: (simple_word)
+            argument: (word)
+            argument: (simple_word)))))))
+
+==================
+Menuentry with options
+==================
+
+menuentry "Entry" --id my-entry --hotkey e --unrestricted {
+  echo hello
+}
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (double_quoted_string
+      (string_content))
+    argument: (word)
+    argument: (concatenation
+      (simple_word)
+      (word))
+    argument: (word)
+    argument: (simple_word)
+    argument: (word)
+    body: (block
+      (simple_command
+        name: (simple_word)
+        argument: (simple_word)))))
+
+==================
+Empty block
+==================
+
+menuentry "Empty" {
+}
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (double_quoted_string
+      (string_content))
+    body: (block)))

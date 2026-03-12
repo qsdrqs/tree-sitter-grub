@@ -1,0 +1,183 @@
+==================
+If then fi
+==================
+
+if [ -s "$prefix/grubenv" ]; then
+  load_env
+fi
+
+---
+
+(source_file
+  (if_command
+    condition: (simple_command
+      name: (word)
+      argument: (word)
+      argument: (double_quoted_string
+        (variable_expansion)
+        (string_content))
+      argument: (word))
+    consequence: (simple_command
+      name: (simple_word))))
+
+==================
+If with multiple commands
+==================
+
+if [ "${x}" ]; then
+  set a=1
+  set b=2
+  save_env x
+fi
+
+---
+
+(source_file
+  (if_command
+    condition: (simple_command
+      name: (word)
+      argument: (double_quoted_string
+        (variable_expansion))
+      argument: (word))
+    consequence: (simple_command
+      name: (simple_word)
+      argument: (concatenation
+        (simple_word)
+        (word)))
+    consequence: (simple_command
+      name: (simple_word)
+      argument: (concatenation
+        (simple_word)
+        (word)))
+    consequence: (simple_command
+      name: (simple_word)
+      argument: (simple_word))))
+
+==================
+If else
+==================
+
+if true; then
+  echo yes
+else
+  echo no
+fi
+
+---
+
+(source_file
+  (if_command
+    condition: (simple_command
+      name: (simple_word))
+    consequence: (simple_command
+      name: (simple_word)
+      argument: (simple_word))
+    alternative: (simple_command
+      name: (simple_word)
+      argument: (simple_word))))
+
+==================
+If elif else
+==================
+
+if cmd1; then
+  echo one
+elif cmd2; then
+  echo two
+else
+  echo three
+fi
+
+---
+
+(source_file
+  (if_command
+    condition: (simple_command
+      name: (simple_word))
+    consequence: (simple_command
+      name: (simple_word)
+      argument: (simple_word))
+    alternative: (elif_clause
+      condition: (simple_command
+        name: (simple_word))
+      consequence: (simple_command
+        name: (simple_word)
+        argument: (simple_word))
+      alternative: (simple_command
+        name: (simple_word)
+        argument: (simple_word)))))
+
+==================
+For loop
+==================
+
+for x in a b c; do
+  echo $x
+done
+
+---
+
+(source_file
+  (for_command
+    variable: (simple_word)
+    value: (simple_word)
+    value: (simple_word)
+    value: (simple_word)
+    body: (simple_command
+      name: (simple_word)
+      argument: (variable_expansion))))
+
+==================
+While loop
+==================
+
+while true; do
+  echo loop
+done
+
+---
+
+(source_file
+  (while_command
+    condition: (simple_command
+      name: (simple_word))
+    body: (simple_command
+      name: (simple_word)
+      argument: (simple_word))))
+
+==================
+Until loop
+==================
+
+until false; do
+  echo loop
+done
+
+---
+
+(source_file
+  (until_command
+    condition: (simple_command
+      name: (simple_word))
+    body: (simple_command
+      name: (simple_word)
+      argument: (simple_word))))
+
+==================
+Function definition
+==================
+
+function grub_warn {
+  echo "Warning: $1"
+}
+
+---
+
+(source_file
+  (function_definition
+    name: (simple_word)
+    (simple_command
+      name: (simple_word)
+      argument: (double_quoted_string
+        (string_content)
+        (variable_expansion)))))

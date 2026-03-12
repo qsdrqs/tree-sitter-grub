@@ -5,7 +5,7 @@
 ## Features
 
 - Commands, arguments, variable expansions (`$var`, `${var}`)
-- Single/double-quoted strings with structured internals
+- Single-quoted strings (fully literal), double-quoted strings with structured internals
 - Compound commands: `if`/`elif`/`else`/`fi`, `for`/`do`/`done`, `while`, `until`
 - Function definitions, blocks (`menuentry`, `submenu`)
 - Concatenation of adjacent tokens (`$root/path`, `"str"$var`)

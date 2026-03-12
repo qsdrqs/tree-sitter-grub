@@ -116,6 +116,19 @@ echo 'hello world'
     argument: (single_quoted_string)))
 
 ==================
+Single quoted string is literal
+==================
+
+echo '$var "hello" #comment \n'
+
+---
+
+(source_file
+  (simple_command
+    name: (simple_word)
+    argument: (single_quoted_string)))
+
+==================
 Double quoted string
 ==================
 
